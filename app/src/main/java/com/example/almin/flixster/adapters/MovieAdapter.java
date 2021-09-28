@@ -1,22 +1,35 @@
 package com.example.almin.flixster.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.almin.flixster.DetailActivity;
+import com.example.almin.flixster.DetailActivity2;
+import com.example.almin.flixster.PlayActivity;
 import com.example.almin.flixster.R;
 import com.example.almin.flixster.models.Movie;
 
+import org.parceler.Parcels;
+
 import java.util.List;
+
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
@@ -51,6 +64,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
+        ImageButton playButton;
+        RelativeLayout container;
         TextView tvTitle;
         TextView tvOverview;
         ImageView ivPoster;
@@ -60,6 +75,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvOverview = itemView.findViewById(R.id.tvOverview);
             ivPoster= itemView.findViewById(R.id.ivPoster);
+            container = itemView.findViewById(R.id.container);
+            playButton = itemView.findViewById(R.id.playButton);
         }
 
         public void bind(Movie movie) {
@@ -72,7 +89,39 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             else {
                 imageUrl = movie.getPosterPath();
             }
-            Glide.with(context).load(imageUrl).placeholder(R.drawable.placeholder).dontAnimate().dontTransform().into(ivPoster);
+            Glide.with(context).load(imageUrl).circleCrop().transform(new RoundedCornersTransformation(30,0)).placeholder(R.drawable.placeholder).dontAnimate().into(ivPoster);
+
+            if (movie.getRating() >= 7.0) {
+                playButton.setVisibility(View.VISIBLE);
+                playButton.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        Intent j = new Intent(context, PlayActivity.class);
+                        j.putExtra("movie", Parcels.wrap(movie));
+                        context.startActivity(j);
+                    }
+                });
+            }
+            if (movie.getRating() <7.0) {
+                playButton.setVisibility(View.GONE);
+            }
+            container.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (movie.getRating() >= 7.0){
+                        Intent i = new Intent(context, DetailActivity.class);
+                        i.putExtra("movie", Parcels.wrap(movie));
+                        context.startActivity(i);
+                    }
+                    else {
+                        Intent i = new Intent(context, DetailActivity2.class);
+                        i.putExtra("movie", Parcels.wrap(movie));
+                        context.startActivity(i);
+
+                    }
+                }
+            });
         }
     }
 }
