@@ -27,7 +27,8 @@ Flix is an app that allows users to browse movies from the [The Movie Database A
 ### Notes
 
 Set popular movies as any movie with 7 or more star rating. 
-Detailed view for popular movies automatically plays the video but also popular movies have a play button which open a new view only playing the video. 
+
+Detailed view for popular movies automatically plays the video but also only the popular movies have a play button that opens a new activity which only plays the  movie's video. 
 
 ## Open-source libraries used
 - [Android Async HTTP](https://github.com/codepath/CPAsyncHttpClient) - Simple asynchronous HTTP requests with JSON parsing
